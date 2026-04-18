@@ -1,5 +1,4 @@
 # l2cap2wav
-# l2cap2wav
 
 Reconstruct audio from Bluetooth L2CAP/A2DP packet captures. Accepts raw pcap/pcapng files directly — tshark is invoked automatically — and decodes SBC frames to WAV via ffmpeg.
 
