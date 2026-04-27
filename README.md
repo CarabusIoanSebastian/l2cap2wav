@@ -4,18 +4,6 @@ Reconstruct audio from Bluetooth L2CAP/A2DP packet captures. Accepts raw pcap/pc
 
 ---
 
-## Requirements
-
-| Dependency | Purpose | Install |
-|------------|---------|---------|
-| Python 3.8+ | Runtime | — |
-| tshark | Parse pcap files | `apt install tshark` / [Wireshark](https://www.wireshark.org/download.html) |
-| ffmpeg | Decode SBC → WAV | `apt install ffmpeg` |
-
-tshark and ffmpeg are both auto-detected across common install locations and `PATH`. If either is missing the script will tell you exactly what's needed.
-
----
-
 ## Usage
 
 ```bash
@@ -114,41 +102,7 @@ Two files are written alongside the WAV:
 | `audio.wav` | Decoded PCM audio, ready to play |
 | `audio.sbc` | Raw SBC bitstream — useful for alternative decoders or manual inspection |
 
-Full console output:
 
-```
-╔══════════════════════════════════════╗
-║   L2CAP A2DP SBC → WAV Extractor    ║
-╚══════════════════════════════════════╝
-Input : capture.pcapng
-Output: capture.wav
-
-[0/3] pcap/pcapng detected — running tshark export...
-  tshark found at: /usr/bin/tshark
-  Exporting L2CAP fields from capture.pcapng...
-  Exported 2761 L2CAP packets → profiles.txt
-
-CID   : 0x0052
-
-[1/3] Parsing L2CAP packets...
-  RTP packets  : 2757
-  Missing gaps : 0
-  SBC bytes    : 1,756,209
-
-[2/3] Detecting SBC parameters...
-  Sample rate  : 48000 Hz
-  Channel mode : joint_stereo
-  Blocks       : 16
-  Subbands     : 8
-  Bitpool      : 39
-  Est. duration: 51.46s
-  Raw SBC saved: capture.sbc
-
-[3/3] Decoding SBC → WAV...
-  Done! WAV saved: capture.wav (9650 KB)
-```
-
----
 
 ## Supported Codecs
 
@@ -160,4 +114,5 @@ CID   : 0x0052
 | LDAC | ⚠️ Proprietary — requires a separate decoder |
 
 ---
+
 The project takes inspiration from https://github.com/kevincartwright/ACDRpcap2wav
