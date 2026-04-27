@@ -10,12 +10,6 @@ Reconstruct audio from Bluetooth L2CAP/A2DP packet captures. Accepts raw pcap/pc
 python3 l2cap2wav.py <input> [audio_cid] [output.wav]
 ```
 
-| Argument | Default | Description |
-|----------|---------|-------------|
-| `input` | *(required)* | pcap, pcapng, or pre-exported tshark text file |
-| `audio_cid` | `0x0052` | L2CAP channel ID carrying the audio stream |
-| `output.wav` | `<input>.wav` | Output WAV file path |
-
 ### Examples
 
 ```bash
