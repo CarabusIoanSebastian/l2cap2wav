@@ -73,24 +73,38 @@ def tshark_export(pcap: Path, out_txt: Path) -> None:
         print("    -e frame.number -e btl2cap.cid \\")
         print("    -e btl2cap.length -e btl2cap.payload \\")
         print("    -Y btl2cap > profiles.txt")
+        print("  If -r <file> fails on permissions: cat capture.pcapng | tshark -r - ...")
         sys.exit(1)
 
     print(f"  tshark found at: {tshark}")
     print(f"  Exporting L2CAP fields from {pcap.name}...")
+    fields_args = [
+        '-T', 'fields',
+        '-e', 'frame.number',
+        '-e', 'btl2cap.cid',
+        '-e', 'btl2cap.length',
+        '-e', 'btl2cap.payload',
+        '-Y', 'btl2cap',
+    ]
     result = subprocess.run(
-        [
-            str(tshark),
-            '-r', str(pcap),
-            '-T', 'fields',
-            '-e', 'frame.number',
-            '-e', 'btl2cap.cid',
-            '-e', 'btl2cap.length',
-            '-e', 'btl2cap.payload',
-            '-Y', 'btl2cap',
-        ],
+        [str(tshark), '-r', str(pcap), *fields_args],
         capture_output=True,
         text=True,
     )
+    if result.returncode != 0:
+        print("  Direct -r <file> failed; retrying via stdin (cat | tshark -r -)...")
+        cat = subprocess.Popen(['cat', str(pcap)], stdout=subprocess.PIPE)
+        try:
+            result = subprocess.run(
+                [str(tshark), '-r', '-', *fields_args],
+                stdin=cat.stdout,
+                capture_output=True,
+                text=True,
+            )
+        finally:
+            if cat.stdout:
+                cat.stdout.close()
+            cat.wait()
     if result.returncode != 0:
         print(f"[ERROR] tshark failed:\n{result.stderr[-500:]}")
         sys.exit(1)
