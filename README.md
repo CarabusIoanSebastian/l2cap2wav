@@ -34,11 +34,6 @@ python3 l2cap2wav.py profiles.txt 0x0052 output.wav
 capture.pcapng
       │
       ▼
- is_pcap() check
-      │
-      ├─ yes → tshark exports L2CAP fields to temp file
-      │
-      ▼
 Filter rows by CID  (or auto-detect best CID)
       │
       ▼
